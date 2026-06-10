@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Services\FileUpload\Contracts\DataNormalizationServiceInterface;
 use App\Services\FileUpload\Contracts\ProcessChargeRecordInterface;
 use App\Services\FileUpload\Contracts\SaveChargeRecordsInterface;
 use App\Services\FileUpload\Contracts\ValidateChargeRecordsInterface;
+use App\Services\FileUpload\DataNormalizationService;
 use App\Services\FileUpload\ProcessChargeRecordService;
 use App\Services\FileUpload\SaveChargeRecordsService;
 use App\Services\FileUpload\ValidateChargeRecordsService;
@@ -16,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
         ProcessChargeRecordInterface::class => ProcessChargeRecordService::class,
         SaveChargeRecordsInterface::class => SaveChargeRecordsService::class,
         ValidateChargeRecordsInterface::class => ValidateChargeRecordsService::class,
+        DataNormalizationServiceInterface::class => DataNormalizationService::class
     ];
 
     /**

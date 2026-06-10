@@ -65,7 +65,6 @@ class ValidateChargeRecordsService implements Contracts\ValidateChargeRecordsInt
                 }
             }
         }
-        dd('invalid records', $this->invalidRecords, 'valid records', $this->validRecords);
     }
 
     /**
@@ -113,5 +112,15 @@ class ValidateChargeRecordsService implements Contracts\ValidateChargeRecordsInt
     {
         $this->records = $records;
         return $this;
+    }
+
+    public function getValidRecords(): Collection
+    {
+        return $this->validRecords;
+    }
+
+    public function getInvalidRecords(): Collection
+    {
+        return $this->invalidRecords;
     }
 }
