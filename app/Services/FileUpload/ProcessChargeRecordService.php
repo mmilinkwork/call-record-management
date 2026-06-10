@@ -12,6 +12,11 @@ class ProcessChargeRecordService implements Contracts\ProcessChargeRecordInterfa
 
     protected UploadedFile $file;
 
+    /**
+     * Dispatch rows in chunk. We are reading file that user tries to upload and chunk rows in batch and pass to job.
+     *
+     * @return void
+     */
     public function dispatchProcessing(): void
     {
         $rows = collect();
@@ -29,6 +34,12 @@ class ProcessChargeRecordService implements Contracts\ProcessChargeRecordInterfa
         }
     }
 
+    /**
+     * Set file.
+     *
+     * @param UploadedFile $uploadedFile
+     * @return ProcessChargeRecordInterface
+     */
     public function setFile(UploadedFile $uploadedFile): ProcessChargeRecordInterface
     {
         $this->file = $uploadedFile;

@@ -43,6 +43,12 @@ class SingleRowValidator
         );
     }
 
+    /**
+     * Write down all rules that we need for field check. If something from these rules doesn't work, we will set row
+     * into array of errors and display those errors to user.
+     *
+     * @return array
+     */
     private function rules(): array
     {
         return [
