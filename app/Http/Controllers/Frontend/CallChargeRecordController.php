@@ -6,19 +6,94 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CallChargeRecordsStore;
 use App\Models\CallChargeRecord;
 use App\Services\FileUpload\Contracts\ProcessChargeRecordInterface;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class CallChargeRecordController extends Controller
 {
+    public const CURRENCIES = [
+        'USD' => 'USD – US Dollar',
+        'EUR' => 'EUR – Euro',
+        'GBP' => 'GBP – British Pound',
+        'JPY' => 'JPY – Japanese Yen',
+        'CHF' => 'CHF – Swiss Franc',
+        'AUD' => 'AUD – Australian Dollar',
+        'CAD' => 'CAD – Canadian Dollar',
+        'CNY' => 'CNY – Chinese Yuan',
+        'SEK' => 'SEK – Swedish Krona',
+        'NOK' => 'NOK – Norwegian Krone',
+        'DKK' => 'DKK – Danish Krone',
+        'PLN' => 'PLN – Polish Zloty',
+        'CZK' => 'CZK – Czech Koruna',
+        'HUF' => 'HUF – Hungarian Forint',
+        'RUB' => 'RUB – Russian Ruble',
+        'TRY' => 'TRY – Turkish Lira',
+        'BRL' => 'BRL – Brazilian Real',
+        'INR' => 'INR – Indian Rupee',
+        'ZAR' => 'ZAR – South African Rand',
+        'MXN' => 'MXN – Mexican Peso',
+    ];
+
     public function __construct(private readonly ProcessChargeRecordInterface $processChargeRecordService)
     {
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $records = CallChargeRecord::paginate(20);
+        $query = CallChargeRecord::query();
 
-        return view('call_charge_records.index', compact('records'));
+        if ($request->filled('imsi')) {
+            $query->where('imsi', 'like', '%' . $request->input('imsi') . '%');
+        }
+
+        if ($request->filled('currency')) {
+            $query->where('currency', $request->input('currency'));
+        }
+
+        if ($request->filled('charge_amount_from')) {
+            $query->where('charge_amount', '>=', (float) $request->input('charge_amount_from'));
+        }
+
+        if ($request->filled('charge_amount_to')) {
+            $query->where('charge_amount', '<=', (float) $request->input('charge_amount_to'));
+        }
+
+        $records = $query->paginate(20)->withQueryString();
+
+        return view('call_charge_records.index', [
+            'records'    => $records,
+            'currencies' => self::CURRENCIES,
+            'filters'    => $request->only(['imsi', 'currency', 'charge_amount_from', 'charge_amount_to']),
+        ]);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $query = CallChargeRecord::query();
+
+        if ($request->filled('imsi')) {
+            $query->where('imsi', 'like', '%' . $request->input('imsi') . '%');
+        }
+
+        if ($request->filled('currency')) {
+            $query->where('currency', $request->input('currency'));
+        }
+
+        if ($request->filled('charge_amount_from')) {
+            $query->where('charge_amount', '>=', (float) $request->input('charge_amount_from'));
+        }
+
+        if ($request->filled('charge_amount_to')) {
+            $query->where('charge_amount', '<=', (float) $request->input('charge_amount_to'));
+        }
+
+        $records = $query->get();
+        $filters = $request->only(['imsi', 'currency', 'charge_amount_from', 'charge_amount_to']);
+
+        $pdf = Pdf::loadView('call_charge_records.pdf', compact('records', 'filters'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('call-charge-records.pdf');
     }
 
     public function store(CallChargeRecordsStore $request)

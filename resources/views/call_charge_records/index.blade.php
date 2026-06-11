@@ -21,6 +21,51 @@
         </div>
     @endif
 
+    {{-- Filter Form --}}
+    <div class="card mb-3">
+        <div class="card-header fw-semibold">Filters</div>
+        <div class="card-body">
+            <form method="GET" action="{{ route('call-records.index') }}" id="filter-form">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="imsi" class="form-label">IMSI</label>
+                        <input type="text" class="form-control" id="imsi" name="imsi"
+                               value="{{ $filters['imsi'] ?? '' }}" placeholder="Search IMSI…">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="charge_amount_from" class="form-label">Charge Amount From</label>
+                        <input type="number" step="0.000001" class="form-control" id="charge_amount_from"
+                               name="charge_amount_from" value="{{ $filters['charge_amount_from'] ?? '' }}"
+                               placeholder="0.00">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="charge_amount_to" class="form-label">Charge Amount To</label>
+                        <input type="number" step="0.000001" class="form-control" id="charge_amount_to"
+                               name="charge_amount_to" value="{{ $filters['charge_amount_to'] ?? '' }}"
+                               placeholder="0.00">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="currency" class="form-label">Currency</label>
+                        <select class="form-select" id="currency" name="currency">
+                            <option value="">— All Currencies —</option>
+                            @foreach ($currencies as $code => $label)
+                                <option value="{{ $code }}" {{ ($filters['currency'] ?? '') === $code ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex gap-2">
+                        <button type="submit" class="btn btn-secondary">Apply Filters</button>
+                        <a href="{{ route('call-records.index') }}" class="btn btn-outline-secondary">Reset</a>
+                        <a href="{{ route('call-records.export-pdf', array_filter($filters)) }}"
+                           class="btn btn-danger">Export PDF</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
