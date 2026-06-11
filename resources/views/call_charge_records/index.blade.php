@@ -70,8 +70,8 @@
         </div>
     </div>
 
-    <div class="mt-3">
-        {{ $records->links() }}
+    <div class="mt-3 d-flex justify-content-center">
+        {{ $records->links('pagination::bootstrap-5') }}
     </div>
 
 </div>
