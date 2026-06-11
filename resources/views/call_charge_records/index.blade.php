@@ -11,7 +11,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Call Charge Records</h2>
-        <a href="{{ route('call-records.create') }}" class="btn btn-primary">UploadCDRFile</a>
+        <a href="{{ route('call-records.create') }}" class="btn btn-primary">Upload CDR File</a>
     </div>
 
     @if (session('success'))

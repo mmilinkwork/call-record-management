@@ -76,8 +76,8 @@
                         <label class="form-label">CLIP Suppress Number</label>
                         <select name="clip_suppress_number" class="form-select @error('clip_suppress_number') is-invalid @enderror">
                             <option value="">— Select —</option>
-                            <option value="1" {{ old('clip_suppress_number', $callRecord->clip_suppress_number) ? 'selected' : '' }}>Yes</option>
-                            <option value="0" {{ old('clip_suppress_number', $callRecord->clip_suppress_number) === false ? 'selected' : '' }}>No</option>
+                            <option value="1" {{ old('clip_suppress_number', $callRecord->clip_suppress_number) == '1' ? 'selected' : '' }}>Yes</option>
+                            <option value="0" {{ old('clip_suppress_number', $callRecord->clip_suppress_number) == '0' && old('clip_suppress_number', $callRecord->clip_suppress_number) !== null && old('clip_suppress_number', $callRecord->clip_suppress_number) !== '' ? 'selected' : '' }}>No</option>
                         </select>
                         @error('clip_suppress_number')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
@@ -151,8 +151,8 @@
                         <label class="form-label">Roaming</label>
                         <select name="roaming" class="form-select @error('roaming') is-invalid @enderror">
                             <option value="">— Select —</option>
-                            <option value="1" {{ old('roaming', $callRecord->roaming) ? 'selected' : '' }}>Yes</option>
-                            <option value="0" {{ old('roaming', $callRecord->roaming) === false ? 'selected' : '' }}>No</option>
+                            <option value="1" {{ old('roaming', $callRecord->roaming) == '1' ? 'selected' : '' }}>Yes</option>
+                            <option value="0" {{ old('roaming', $callRecord->roaming) == '0' && old('roaming', $callRecord->roaming) !== null && old('roaming', $callRecord->roaming) !== '' ? 'selected' : '' }}>No</option>
                         </select>
                         @error('roaming')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
@@ -306,8 +306,8 @@
                         <label class="form-label">Charge Free Action</label>
                         <select name="charge_free_action" class="form-select @error('charge_free_action') is-invalid @enderror">
                             <option value="">— Select —</option>
-                            <option value="1" {{ old('charge_free_action', $callRecord->charge_free_action) ? 'selected' : '' }}>Yes</option>
-                            <option value="0" {{ old('charge_free_action', $callRecord->charge_free_action) === false ? 'selected' : '' }}>No</option>
+                            <option value="1" {{ old('charge_free_action', $callRecord->charge_free_action) == '1' ? 'selected' : '' }}>Yes</option>
+                            <option value="0" {{ old('charge_free_action', $callRecord->charge_free_action) == '0' && old('charge_free_action', $callRecord->charge_free_action) !== null && old('charge_free_action', $callRecord->charge_free_action) !== '' ? 'selected' : '' }}>No</option>
                         </select>
                         @error('charge_free_action')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
