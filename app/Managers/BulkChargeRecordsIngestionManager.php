@@ -4,11 +4,18 @@ namespace App\Managers;
 
 use App\Managers\Contracts\BulkChargeRecordsIngestionManagerInterface;
 use App\Models\CallChargeRecord;
+use App\Models\CallChargeRecordInvalid;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class BulkChargeRecordsIngestionManager implements BulkChargeRecordsIngestionManagerInterface
 {
+    /**
+     * Store valid Charge Records in the database using bulk ingestion.
+     *
+     * @param Collection $records
+     * @return void
+     */
     public function validCallRecordsBulkInsert(Collection $records): void
     {
         try {
@@ -21,8 +28,18 @@ class BulkChargeRecordsIngestionManager implements BulkChargeRecordsIngestionMan
         }
     }
 
+    /**
+     * Store invalid records so we can track what happened.
+     *
+     * @param Collection $records
+     * @return void
+     */
     public function invalidCallRecordsBulkInsert(Collection $records): void
     {
-        // TODO: Implement invalidCallRecordsBulkInsert() method.
+        try {
+            CallChargeRecordInvalid::insert($records->toArray());
+        } catch (\Exception $exception) {
+            Log::error("Bulk insert for invalid call records fail. See details: " . $exception->getMessage());
+        }
     }
 }

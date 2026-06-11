@@ -39,6 +39,7 @@ class SaveChargeRecordsService implements Contracts\SaveChargeRecordsInterface
                      ->transform();
 
         $this->bulkChargeRecordsIngestionManager->validCallRecordsBulkInsert($validData);
+        $this->bulkChargeRecordsIngestionManager->invalidCallRecordsBulkInsert($this->validateChargeRecordsService->getInvalidRecords());
     }
 
     /**

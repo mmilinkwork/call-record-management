@@ -3,12 +3,15 @@
 namespace Tests\Unit;
 
 use App\Models\CallChargeRecord;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CallChargeRecordMappingTest extends BaseTest
 {
+    use RefreshDatabase;
+
     /**
      * This test ensures structural contract integrity between SingleRowDTO and CallChargeRecord Eloquent model.
-     * 1. Why I'm doing this test:
+     * 1. Why we are doing this test:
      *      We are working with a strict file → DTO → database pipeline where data is ingested in bulk.
      *      Any change in DTO structure or mapping can silently break data persistence or cause field loss without runtime errors.
      *      This test exists to prevent unnoticed contract drift between layers.

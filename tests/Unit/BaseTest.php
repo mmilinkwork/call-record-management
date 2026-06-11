@@ -7,15 +7,25 @@ use App\Services\FileUpload\Enums\CrceOperationEnum;
 use App\Services\FileUpload\Enums\FeatureEnum;
 use App\Services\FileUpload\Enums\TrafficTypeEnum;
 use Faker\Factory;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class BaseTest extends TestCase
 {
+    /**
+     * Generate fake data for SingleRowDTO.
+     *
+     * @return SingleRowDTO
+     */
     protected function generateSingleRowDTO(): SingleRowDTO
     {
         return new SingleRowDTO($this->singleRecordData());
     }
 
+    /**
+     * Return data with expected dummy values for single row record.
+     *
+     * @return array
+     */
     private function singleRecordData(): array
     {
         $faker = Factory::create();

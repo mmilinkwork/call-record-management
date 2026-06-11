@@ -79,7 +79,7 @@ return new class extends Migration
             $table->unsignedInteger('number_of_sms')->nullable();
             $table->unsignedInteger('ticket_number_of_sms')->nullable();
 
-            $table->string('reference_number');
+            $table->string('reference_number')->unique();
 
             $table->boolean('charge_free_action');
 

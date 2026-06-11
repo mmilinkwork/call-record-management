@@ -63,6 +63,11 @@ class ValidateChargeRecordsService implements Contracts\ValidateChargeRecordsInt
                         'message' => $exception->getMessage()
                     ]);
                 }
+            } else {
+                $this->invalidRecords->push([
+                    'record' => $record,
+                    'message' => "Insufficient fields"
+                ]);
             }
         }
     }
