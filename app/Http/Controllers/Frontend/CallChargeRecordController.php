@@ -44,26 +44,9 @@ class CallChargeRecordController extends Controller
         return $pdf->download('call-charge-records.pdf');
     }
 
-    private function applyFilters(\Illuminate\Database\Eloquent\Builder $query, Request $request): \Illuminate\Database\Eloquent\Builder
+    public function create()
     {
-        if ($request->filled('imsi')) {
-            $safe = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $request->input('imsi'));
-            $query->where('imsi', 'like', '%' . $safe . '%');
-        }
-
-        if ($request->filled('currency')) {
-            $query->where('currency', $request->input('currency'));
-        }
-
-        if ($request->filled('charge_amount_from')) {
-            $query->where('charge_amount', '>=', (float) $request->input('charge_amount_from'));
-        }
-
-        if ($request->filled('charge_amount_to')) {
-            $query->where('charge_amount', '<=', (float) $request->input('charge_amount_to'));
-        }
-
-        return $query;
+        return view('call_charge_records.upload');
     }
 
     public function store(CallChargeRecordsStore $request)
@@ -147,5 +130,27 @@ class CallChargeRecordController extends Controller
         $callRecord->delete();
 
         return redirect()->route('call-records.index')->with('success', 'Record deleted successfully.');
+    }
+
+    private function applyFilters(\Illuminate\Database\Eloquent\Builder $query, Request $request): \Illuminate\Database\Eloquent\Builder
+    {
+        if ($request->filled('imsi')) {
+            $safe = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $request->input('imsi'));
+            $query->where('imsi', 'like', '%' . $safe . '%');
+        }
+
+        if ($request->filled('currency')) {
+            $query->where('currency', $request->input('currency'));
+        }
+
+        if ($request->filled('charge_amount_from')) {
+            $query->where('charge_amount', '>=', (float) $request->input('charge_amount_from'));
+        }
+
+        if ($request->filled('charge_amount_to')) {
+            $query->where('charge_amount', '<=', (float) $request->input('charge_amount_to'));
+        }
+
+        return $query;
     }
 }
