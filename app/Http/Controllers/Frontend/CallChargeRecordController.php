@@ -40,25 +40,9 @@ class CallChargeRecordController extends Controller
 
     public function index(Request $request)
     {
-        $query = CallChargeRecord::query();
-
-        if ($request->filled('imsi')) {
-            $query->where('imsi', 'like', '%' . $request->input('imsi') . '%');
-        }
-
-        if ($request->filled('currency')) {
-            $query->where('currency', $request->input('currency'));
-        }
-
-        if ($request->filled('charge_amount_from')) {
-            $query->where('charge_amount', '>=', (float) $request->input('charge_amount_from'));
-        }
-
-        if ($request->filled('charge_amount_to')) {
-            $query->where('charge_amount', '<=', (float) $request->input('charge_amount_to'));
-        }
-
-        $records = $query->paginate(20)->withQueryString();
+        $records = $this->applyFilters(CallChargeRecord::query(), $request)
+            ->paginate(20)
+            ->withQueryString();
 
         return view('call_charge_records.index', [
             'records'    => $records,
@@ -69,10 +53,20 @@ class CallChargeRecordController extends Controller
 
     public function exportPdf(Request $request)
     {
-        $query = CallChargeRecord::query();
+        $records = $this->applyFilters(CallChargeRecord::query(), $request)->get();
+        $filters = $request->only(['imsi', 'currency', 'charge_amount_from', 'charge_amount_to']);
 
+        $pdf = Pdf::loadView('call_charge_records.pdf', compact('records', 'filters'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('call-charge-records.pdf');
+    }
+
+    private function applyFilters(\Illuminate\Database\Eloquent\Builder $query, Request $request): \Illuminate\Database\Eloquent\Builder
+    {
         if ($request->filled('imsi')) {
-            $query->where('imsi', 'like', '%' . $request->input('imsi') . '%');
+            $safe = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $request->input('imsi'));
+            $query->where('imsi', 'like', '%' . $safe . '%');
         }
 
         if ($request->filled('currency')) {
@@ -87,13 +81,7 @@ class CallChargeRecordController extends Controller
             $query->where('charge_amount', '<=', (float) $request->input('charge_amount_to'));
         }
 
-        $records = $query->get();
-        $filters = $request->only(['imsi', 'currency', 'charge_amount_from', 'charge_amount_to']);
-
-        $pdf = Pdf::loadView('call_charge_records.pdf', compact('records', 'filters'))
-            ->setPaper('a4', 'landscape');
-
-        return $pdf->download('call-charge-records.pdf');
+        return $query;
     }
 
     public function store(CallChargeRecordsStore $request)
