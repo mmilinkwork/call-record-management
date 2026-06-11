@@ -12,26 +12,8 @@ use Illuminate\Http\Request;
 class CallChargeRecordController extends Controller
 {
     public const CURRENCIES = [
-        'USD' => 'USD – US Dollar',
-        'EUR' => 'EUR – Euro',
-        'GBP' => 'GBP – British Pound',
-        'JPY' => 'JPY – Japanese Yen',
-        'CHF' => 'CHF – Swiss Franc',
-        'AUD' => 'AUD – Australian Dollar',
-        'CAD' => 'CAD – Canadian Dollar',
-        'CNY' => 'CNY – Chinese Yuan',
-        'SEK' => 'SEK – Swedish Krona',
-        'NOK' => 'NOK – Norwegian Krone',
-        'DKK' => 'DKK – Danish Krone',
-        'PLN' => 'PLN – Polish Zloty',
-        'CZK' => 'CZK – Czech Koruna',
-        'HUF' => 'HUF – Hungarian Forint',
-        'RUB' => 'RUB – Russian Ruble',
-        'TRY' => 'TRY – Turkish Lira',
-        'BRL' => 'BRL – Brazilian Real',
-        'INR' => 'INR – Indian Rupee',
-        'ZAR' => 'ZAR – South African Rand',
-        'MXN' => 'MXN – Mexican Peso',
+        'MB' => 'MB',
+        'MINUTEN UND SMS' => 'Minutes and SMS',
     ];
 
     public function __construct(private readonly ProcessChargeRecordInterface $processChargeRecordService)
