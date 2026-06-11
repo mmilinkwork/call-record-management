@@ -2,6 +2,7 @@
 
 namespace App\Services\FileUpload;
 
+use App\Managers\Contracts\BulkChargeRecordsIngestionManagerInterface;
 use App\Services\FileUpload\Contracts\DataNormalizationServiceInterface;
 use App\Services\FileUpload\Contracts\SaveChargeRecordsInterface;
 use App\Services\FileUpload\Contracts\ValidateChargeRecordsInterface;
@@ -13,7 +14,8 @@ class SaveChargeRecordsService implements Contracts\SaveChargeRecordsInterface
 
     public function __construct(
         private ValidateChargeRecordsInterface $validateChargeRecordsService,
-        private DataNormalizationServiceInterface $dataNormalizationService
+        private DataNormalizationServiceInterface $dataNormalizationService,
+        private BulkChargeRecordsIngestionManagerInterface $bulkChargeRecordsIngestionManager
     )
     {
     }
@@ -31,7 +33,12 @@ class SaveChargeRecordsService implements Contracts\SaveChargeRecordsInterface
     public function saveRecords()
     {
         $this->validateChargeRecordsService->setRecords($this->records)->validate();
-        $this->dataNormalizationService->setRecords($this->validateChargeRecordsService->getValidRecords())->transform();
+
+        $validData = $this->dataNormalizationService
+                     ->setRecords($this->validateChargeRecordsService->getValidRecords())
+                     ->transform();
+
+        $this->bulkChargeRecordsIngestionManager->validCallRecordsBulkInsert($validData);
     }
 
     /**

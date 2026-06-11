@@ -52,8 +52,8 @@ class SingleRowValidator
     private function rules(): array
     {
         return [
-            'operation' => ['required', Rule::enum(CrceOperationEnum::class)],
-            'feature' => ['required', Rule::enum(FeatureEnum::class)],
+            'crce_operation' => ['required', Rule::enum(CrceOperationEnum::class)],
+            'charge_mode' => ['required', Rule::enum(FeatureEnum::class)],
             'sequence_total' => ['nullable', 'integer'],
             'imsi' => ['required', 'string']
         ];

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Managers\BulkChargeRecordsIngestionManager;
+use App\Managers\Contracts\BulkChargeRecordsIngestionManagerInterface;
 use App\Services\FileUpload\Contracts\DataNormalizationServiceInterface;
 use App\Services\FileUpload\Contracts\ProcessChargeRecordInterface;
 use App\Services\FileUpload\Contracts\SaveChargeRecordsInterface;
@@ -18,7 +20,8 @@ class AppServiceProvider extends ServiceProvider
         ProcessChargeRecordInterface::class => ProcessChargeRecordService::class,
         SaveChargeRecordsInterface::class => SaveChargeRecordsService::class,
         ValidateChargeRecordsInterface::class => ValidateChargeRecordsService::class,
-        DataNormalizationServiceInterface::class => DataNormalizationService::class
+        DataNormalizationServiceInterface::class => DataNormalizationService::class,
+        BulkChargeRecordsIngestionManagerInterface::class => BulkChargeRecordsIngestionManager::class
     ];
 
     /**
