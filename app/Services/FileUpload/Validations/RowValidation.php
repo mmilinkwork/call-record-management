@@ -2,7 +2,7 @@
 
 namespace App\Services\FileUpload\Validations;
 
-use App\Services\FileUpload\Contracts\RowValidationInterface;
+use App\Services\FileUpload\Contracts\Validation\RowValidationInterface;
 
 abstract class RowValidation implements RowValidationInterface
 {

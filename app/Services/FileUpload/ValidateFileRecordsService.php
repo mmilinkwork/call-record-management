@@ -2,13 +2,13 @@
 
 namespace App\Services\FileUpload;
 
-use App\Services\FileUpload\Contracts\ValidateFileRecordsInterface;
+use App\Services\FileUpload\Contracts\Validation\ValidateFileRecordsInterface;
 use App\Services\FileUpload\Enums\FileStrategyEnum;
 use App\Services\FileUpload\Mapping\FileMappingStrategyResolver;
 use App\Services\FileUpload\Validations\RowValidationStrategyResolver;
 use Illuminate\Support\Collection;
 
-class ValidateFileRecordsService implements Contracts\ValidateFileRecordsInterface
+class ValidateFileRecordsService implements Contracts\Validation\ValidateFileRecordsInterface
 {
     private const EXPECTED_NUMBER_OF_FIELDS = 73; //Ovo se menja na nivou strategije
     private FileStrategyEnum $fileStrategy;

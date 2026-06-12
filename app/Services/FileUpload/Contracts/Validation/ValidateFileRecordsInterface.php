@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\FileUpload\Contracts;
+namespace App\Services\FileUpload\Contracts\Validation;
 
 use App\Services\FileUpload\Enums\FileStrategyEnum;
 use Illuminate\Support\Collection;

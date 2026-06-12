@@ -2,7 +2,7 @@
 
 namespace App\Services\FileUpload\Validations;
 
-use App\Services\FileUpload\Contracts\ValidationResultInterface;
+use App\Services\FileUpload\Contracts\Validation\ValidationResultInterface;
 use Illuminate\Support\Collection;
 
 readonly class ValidationResult implements ValidationResultInterface

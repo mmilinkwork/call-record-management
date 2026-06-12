@@ -3,10 +3,9 @@
 namespace App\Services\FileUpload\Validations;
 
 use App\Services\FileUpload\Contracts\FileMappingInterface;
-use App\Services\FileUpload\Contracts\ValidationResultInterface;
+use App\Services\FileUpload\Contracts\Validation\ValidationResultInterface;
 use App\Services\FileUpload\Enums\CrceOperationEnum;
 use App\Services\FileUpload\Enums\FeatureEnum;
-use App\Services\FileUpload\Validations\RowValidation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
