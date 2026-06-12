@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CallChargeRecordsStore;
 use App\Models\CallChargeRecord;
-use App\Services\FileUpload\Contracts\ProcessChargeRecordInterface;
+use App\Services\FileUpload\Contracts\ProcessFileInterface;
+use App\Services\FileUpload\Enums\FileStrategyEnum;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,7 @@ class CallChargeRecordController extends Controller
         'MINUTEN UND SMS' => 'Minutes and SMS',
     ];
 
-    public function __construct(private readonly ProcessChargeRecordInterface $processChargeRecordService)
+    public function __construct(private readonly ProcessFileInterface $processChargeRecordService)
     {
     }
 
@@ -52,6 +53,7 @@ class CallChargeRecordController extends Controller
     public function store(CallChargeRecordsStore $request)
     {
         $this->processChargeRecordService
+            ->setStrategy(FileStrategyEnum::CALL_RECORD_STORE)
             ->setFile($request->file('file'))
             ->dispatchProcessing();
     }
