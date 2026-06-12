@@ -2,14 +2,21 @@
 
 namespace App\Services\FileUpload;
 
-use App\Services\FileUpload\Contracts\DataNormalizationServiceInterface;
-use App\Services\FileUpload\DataTransferObjects\SingleRowDTO;
-use App\Services\FileUpload\Enums\TrafficTypeEnum;
+use App\Services\FileUpload\Contracts\Normalization\DataNormalizationServiceInterface;
+use App\Services\FileUpload\Enums\FileStrategyEnum;
+use App\Services\FileUpload\Normalization\NormalizationResolver;
 use Illuminate\Support\Collection;
 
-class DataNormalizationService implements Contracts\DataNormalizationServiceInterface
+class DataNormalizationService implements Contracts\Normalization\DataNormalizationServiceInterface
 {
     private Collection $records;
+    private FileStrategyEnum $fileStrategy;
+    private NormalizationResolver $normalizationResolver;
+
+    public function __construct()
+    {
+        $this->normalizationResolver = new NormalizationResolver();
+    }
 
     /**
      * We are transforming data for database insert.
@@ -19,34 +26,11 @@ class DataNormalizationService implements Contracts\DataNormalizationServiceInte
      */
     public function transform(): Collection
     {
-        $this->records->transform(function ($item) {
-            return $this->normalizeData($item);
+        $this->records->transform(function ($singleRow) {
+            return $this->normalizationResolver->resolve($this->fileStrategy)->adjustData($singleRow);
         });
 
         return collect($this->records);
-    }
-
-    /**
-     * Using normalizeData method, we are changing structure of our data before insert into database.
-     * Because we have some business rules we need to change some values in fields before inserting to database.
-     * Example: For TrafficType=ShortMessage (SMS/MMS) duration is zero.
-     * Documentation link: https://www.example.org/pscharfen-CRCECONF-ConfirmationRecord-280423-0734-135.pdf
-     *
-     * @param SingleRowDTO $singleRowDTO
-     * @return array
-     */
-    private function normalizeData(SingleRowDTO $singleRowDTO): array
-    {
-        $data = $singleRowDTO->toArray();
-
-        if($singleRowDTO->trafficType == TrafficTypeEnum::SHORT_MESSAGE->value)
-        {
-            $data['call_duration'] = 0;
-            $data['ticket_call_duration'] = 0;
-            $data['charged_duration'] = 0;
-        }
-
-        return $data;
     }
 
     /**
@@ -56,6 +40,16 @@ class DataNormalizationService implements Contracts\DataNormalizationServiceInte
     public function setRecords(Collection $records): DataNormalizationServiceInterface
     {
         $this->records = $records;
+        return $this;
+    }
+
+    /**
+     * @param FileStrategyEnum $fileStrategy
+     * @return DataNormalizationServiceInterface
+     */
+    public function setStrategy(FileStrategyEnum $fileStrategy): DataNormalizationServiceInterface
+    {
+        $this->fileStrategy = $fileStrategy;
         return $this;
     }
 }
