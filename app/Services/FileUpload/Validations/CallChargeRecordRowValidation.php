@@ -2,14 +2,15 @@
 
 namespace App\Services\FileUpload\Validations;
 
-use App\Services\FileUpload\DataTransferObjects\SingleRowDTO;
+use App\Services\FileUpload\Contracts\FileMappingInterface;
+use App\Services\FileUpload\Contracts\Validation\ValidationResultInterface;
 use App\Services\FileUpload\Enums\CrceOperationEnum;
 use App\Services\FileUpload\Enums\FeatureEnum;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
-class SingleRowValidator
+class CallChargeRecordRowValidation extends RowValidation
 {
     private Collection $errors;
 
@@ -22,17 +23,17 @@ class SingleRowValidator
      * Validate all fields, especially condition fields that are described into documentation.
      * Documentation link: https://www.example.org/pscharfen-CRCECONF-ConfirmationRecord-280423-0734-135.pdf
      *
-     * @param SingleRowDTO $dto
+     * @param FileMappingInterface $record
      * @return ValidationResult
      */
-    public function validate(SingleRowDTO $singleRowDTO): ValidationResult
+    public function validate(FileMappingInterface $record): ValidationResultInterface
     {
-        $validator = Validator::make(data: $singleRowDTO->toArray(), rules: $this->rules());
+        $validator = Validator::make(data: $record->toArray(), rules: $this->rules());
 
         if ($validator->fails())
         {
             $this->errors->push((object)[
-                'record' => $singleRowDTO->toJson(),
+                'record' => $record->toJson(),
                 'errors' => $validator->errors()->toJson()
             ]);
         }

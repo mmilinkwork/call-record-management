@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\Services\FileUpload\DataTransferObjects\SingleRowDTO;
 use App\Services\FileUpload\Enums\CrceOperationEnum;
 use App\Services\FileUpload\Enums\FeatureEnum;
 use App\Services\FileUpload\Enums\TrafficTypeEnum;
+use App\Services\FileUpload\Mapping\CallRecordMapper;
 use Faker\Factory;
 use Tests\TestCase;
 
@@ -14,11 +14,11 @@ class BaseTest extends TestCase
     /**
      * Generate fake data for SingleRowDTO.
      *
-     * @return SingleRowDTO
+     * @return CallRecordMapper
      */
-    protected function generateSingleRowDTO(): SingleRowDTO
+    protected function generateCallRecordFileMapper(): CallRecordMapper
     {
-        return new SingleRowDTO($this->singleRecordData());
+        return new CallRecordMapper($this->singleRecordData());
     }
 
     /**

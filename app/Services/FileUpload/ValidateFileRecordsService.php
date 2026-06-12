@@ -2,27 +2,30 @@
 
 namespace App\Services\FileUpload;
 
-use App\Services\FileUpload\Contracts\ValidateChargeRecordsInterface;
-use App\Services\FileUpload\Validations\SingleRowValidator;
-use App\Services\FileUpload\Validations\ValidationResult;
+use App\Services\FileUpload\Contracts\Validation\ValidateFileRecordsInterface;
+use App\Services\FileUpload\Enums\FileStrategyEnum;
+use App\Services\FileUpload\Mapping\FileMappingStrategyResolver;
+use App\Services\FileUpload\Validations\RowValidationStrategyResolver;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
-class ValidateChargeRecordsService implements Contracts\ValidateChargeRecordsInterface
+class ValidateFileRecordsService implements Contracts\Validation\ValidateFileRecordsInterface
 {
-    private const EXPECTED_NUMBER_OF_FIELDS = 73;
+    private const EXPECTED_NUMBER_OF_FIELDS = 73; //Ovo se menja na nivou strategije
+    private FileStrategyEnum $fileStrategy;
 
     private Collection $records;
 
     private Collection $validRecords;
     private Collection $invalidRecords;
-    private SingleRowValidator $singleRowValidator;
+    private FileMappingStrategyResolver $fileMappingStrategyResolver;
+    private RowValidationStrategyResolver $rowValidationStrategyResolver;
 
     public function __construct()
     {
         $this->validRecords = collect();
         $this->invalidRecords = collect();
-        $this->singleRowValidator = new SingleRowValidator();
+        $this->rowValidationStrategyResolver = new RowValidationStrategyResolver();
+        $this->fileMappingStrategyResolver = new FileMappingStrategyResolver();
     }
 
     /**
@@ -40,17 +43,20 @@ class ValidateChargeRecordsService implements Contracts\ValidateChargeRecordsInt
             if ($this->hasEnoughFields(explode('|', $record)))
             {
                 try {
-                    $singleRowDTO = new DataTransferObjects\SingleRowDTO($this->parseSingleRow($record));
+                    $mappedRow = $this->fileMappingStrategyResolver
+                                      ->resolve($this->fileStrategy, $this->parseSingleRow($record));
 
-                    $validationResult = $this->singleRowValidator->validate($singleRowDTO);
+                    $validationResult = $this->rowValidationStrategyResolver
+                                             ->resolve($this->fileStrategy)
+                                             ->validate($mappedRow);
 
-                    if ($validationResult->passes)
+                    if ($validationResult->hasPassed())
                     {
-                        $this->validRecords->push($singleRowDTO);
+                        $this->validRecords->push($mappedRow);
                     } else
                     {
                         $invalidRow = (object) [
-                            'record' => $singleRowDTO->toJson(),
+                            'record' => $mappedRow->toJson(),
                             'errors' => $validationResult->errors
                         ];
 
@@ -111,19 +117,35 @@ class ValidateChargeRecordsService implements Contracts\ValidateChargeRecordsInt
      * Set collection of rows.
      *
      * @param Collection $records
-     * @return ValidateChargeRecordsInterface
+     * @return ValidateFileRecordsInterface
      */
-    public function setRecords(Collection $records): ValidateChargeRecordsInterface
+    public function setRecords(Collection $records): ValidateFileRecordsInterface
     {
         $this->records = $records;
         return $this;
     }
 
+    /**
+     * @param FileStrategyEnum $fileStrategy
+     * @return ValidateFileRecordsInterface
+     */
+    public function setStrategy(FileStrategyEnum $fileStrategy): ValidateFileRecordsInterface
+    {
+        $this->fileStrategy = $fileStrategy;
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
     public function getValidRecords(): Collection
     {
         return $this->validRecords;
     }
 
+    /**
+     * @return Collection
+     */
     public function getInvalidRecords(): Collection
     {
         return $this->invalidRecords;

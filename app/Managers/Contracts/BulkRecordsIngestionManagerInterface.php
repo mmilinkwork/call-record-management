@@ -4,7 +4,7 @@ namespace App\Managers\Contracts;
 
 use Illuminate\Support\Collection;
 
-interface BulkChargeRecordsIngestionManagerInterface
+interface BulkRecordsIngestionManagerInterface
 {
     public function validCallRecordsBulkInsert(Collection $records): void;
 

@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\CallChargeRecord;
 use App\Models\CallChargeRecordInvalid;
-use App\Services\FileUpload\ProcessChargeRecordService;
+use App\Services\FileUpload\ProcessFileService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 

@@ -2,14 +2,16 @@
 
 namespace App\Services\FileUpload;
 
-use App\Jobs\SaveChargeRecordsJob;
-use App\Services\FileUpload\Contracts\ProcessChargeRecordInterface;
+use App\Jobs\SaveFileRecordsJob;
+use App\Services\FileUpload\Contracts\ProcessFileInterface;
+use App\Services\FileUpload\Enums\FileStrategyEnum;
 use Illuminate\Http\UploadedFile;
 
-class ProcessChargeRecordService implements Contracts\ProcessChargeRecordInterface
+class ProcessFileService implements Contracts\ProcessFileInterface
 {
     private const BATCH_SIZE = 10;
 
+    protected FileStrategyEnum $fileStrategy;
     protected UploadedFile $file;
 
     /**
@@ -27,7 +29,7 @@ class ProcessChargeRecordService implements Contracts\ProcessChargeRecordInterfa
             if ($rows->count() == self::BATCH_SIZE)
             {
                 // dispatch a job to process the current batch of lines
-                SaveChargeRecordsJob::dispatch($rows);
+                SaveFileRecordsJob::dispatch($rows, $this->fileStrategy);
 
                 $rows = collect(); // reset the collection for the next batch
             }
@@ -38,11 +40,23 @@ class ProcessChargeRecordService implements Contracts\ProcessChargeRecordInterfa
      * Set file.
      *
      * @param UploadedFile $uploadedFile
-     * @return ProcessChargeRecordInterface
+     * @return ProcessFileInterface
      */
-    public function setFile(UploadedFile $uploadedFile): ProcessChargeRecordInterface
+    public function setFile(UploadedFile $uploadedFile): ProcessFileInterface
     {
         $this->file = $uploadedFile;
+        return $this;
+    }
+
+    /**
+     * Set strategy for given file.
+     *
+     * @param FileStrategyEnum $strategy
+     * @return ProcessFileInterface
+     */
+    public function setStrategy(FileStrategyEnum $strategy): ProcessFileInterface
+    {
+        $this->fileStrategy = $strategy;
         return $this;
     }
 }

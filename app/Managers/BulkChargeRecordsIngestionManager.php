@@ -2,13 +2,13 @@
 
 namespace App\Managers;
 
-use App\Managers\Contracts\BulkChargeRecordsIngestionManagerInterface;
+use App\Managers\Contracts\BulkRecordsIngestionManagerInterface;
 use App\Models\CallChargeRecord;
 use App\Models\CallChargeRecordInvalid;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-class BulkChargeRecordsIngestionManager implements BulkChargeRecordsIngestionManagerInterface
+class BulkChargeRecordsIngestionManager implements BulkRecordsIngestionManagerInterface
 {
     /**
      * Store valid Charge Records in the database using bulk ingestion.
