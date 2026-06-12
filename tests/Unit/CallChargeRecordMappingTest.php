@@ -29,7 +29,7 @@ class CallChargeRecordMappingTest extends BaseTest
     {
         $callChargeRecordModelKeys = (new CallChargeRecord())->getFillable();
 
-        $singleRowDtoKeys = array_keys($this->generateSingleRowDTO()->toArray());
+        $singleRowDtoKeys = array_keys($this->generateCallRecordFileMapper()->toArray());
 
         $this->assertSame(
             $callChargeRecordModelKeys,  // expected: the model is the contract
