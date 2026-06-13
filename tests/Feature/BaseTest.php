@@ -14,6 +14,12 @@ class BaseTest extends TestCase
      * Fields are pipe-delimited; ValidateFileRecordsService maps them to 1-based keys,
      * so ConfirmationRecordMapperEnum values 25–33 correspond to 0-based indices 24–32.
      *
+     * Rows 1–3: valid (non-empty crce_operation; service_type is empty or a ServiceTypeEnum value).
+     * Rows 4–7: invalid crce_operation (field 25 is empty, failing the required rule).
+     * Rows 8–10: invalid service_type (not a ServiceTypeEnum case — none of these strings
+     *            appear in ServiceTypeEnum, which defines: IVR_SELFCARE, CRM, USSD_SELFCARE,
+     *            AUTOMATIC, EXTERNAL, PROVISIONING, CAMPAIGN, OTHER).
+     *
      * @return string
      */
     protected function generateConfirmationFileContent(): string
