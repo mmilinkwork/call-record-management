@@ -53,9 +53,9 @@ class ValidateFileRecordsService implements Contracts\Validation\ValidateFileRec
                     $this->validRecords->push($mappedRow);
                 } else
                 {
-                    $invalidRow = (object) [
+                    $invalidRow = [
                         'record' => $mappedRow->toJson(),
-                        'errors' => $validationResult->errors
+                        'message' => $validationResult->getErrors()->toJson()
                     ];
 
                     $this->invalidRecords->push($invalidRow);

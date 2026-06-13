@@ -27,10 +27,7 @@ class ConfirmationRecordRowValidation extends RowValidation
 
         if ($validator->fails())
         {
-            $this->errors->push((object)[
-                'record' => $record->toJson(),
-                'errors' => $validator->errors()->toJson()
-            ]);
+            $this->errors->push($validator->errors()->toArray());
         }
 
         return new ValidationResult(
@@ -48,9 +45,9 @@ class ConfirmationRecordRowValidation extends RowValidation
     private function rules(): array
     {
         return [
-            'crce_operation' => ['required'],
+            'crce_operation' => ['required', 'string'],
             'active_feature' => ['nullable', 'string'],
-            'sequence_total' => ['nullable', 'integer'],
+            'sequence_total' => ['nullable', 'int'],
             'service_type' => ['nullable', Rule::enum(ServiceTypeEnum::class)]
         ];
     }

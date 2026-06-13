@@ -4,6 +4,7 @@ namespace App\Managers;
 
 use App\Managers\Contracts\BulkRecordsIngestionManagerInterface;
 use App\Models\ConfirmationRecord;
+use App\Models\ConfirmationRecordInvalid;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -36,7 +37,7 @@ class BulkConfirmationRecordsIngestionManager implements BulkRecordsIngestionMan
     public function invalidRecordsBulkInsert(Collection $records): void
     {
         try {
-            //waiting for model and migration
+            ConfirmationRecordInvalid::insert($records->toArray());
         } catch (\Exception $exception)
         {
             Log::error("Bulk insert for invalid call records fail. See details: " . $exception->getMessage());
