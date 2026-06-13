@@ -9,6 +9,36 @@ use Tests\TestCase;
 class BaseTest extends TestCase
 {
     /**
+     * Generate a confirmation record file for testing.
+     * Produces exactly 10 rows (one full batch) with 3 valid and 7 invalid records.
+     * Fields are pipe-delimited; ValidateFileRecordsService maps them to 1-based keys,
+     * so ConfirmationRecordMapperEnum values 25–33 correspond to 0-based indices 24–32.
+     *
+     * Rows 1–3: valid (non-empty crce_operation; service_type is empty or a ServiceTypeEnum value).
+     * Rows 4–7: invalid crce_operation (field 25 is empty, failing the required rule).
+     * Rows 8–10: invalid service_type (not a ServiceTypeEnum case — none of these strings
+     *            appear in ServiceTypeEnum, which defines: IVR_SELFCARE, CRM, USSD_SELFCARE,
+     *            AUTOMATIC, EXTERNAL, PROVISIONING, CAMPAIGN, OTHER).
+     *
+     * @return string
+     */
+    protected function generateConfirmationFileContent(): string
+    {
+        return <<<'TXT'
+|||||||||||||||||||||||FinalCommit|BasicSession|1|BUNDLE001|12345|CRM|UserX|EN|228692000001
+|||||||||||||||||||||||Charge|BasicEvent|2|BUNDLE002|67890|IVR_SELFCARE|UserY|DE|228692000002
+|||||||||||||||||||||||FallbackScp|BasicSession|3|BUNDLE003|11111||UserZ|FR|228692000003
+||||||||||||||||||||||||BasicSession|1|BUNDLE004|22222|CRM|UserX|EN|228692000004
+||||||||||||||||||||||||BasicEvent|2|BUNDLE005|33333|AUTOMATIC|UserY|DE|228692000005
+||||||||||||||||||||||||BasicSession|3|BUNDLE006|44444|CAMPAIGN|UserZ|FR|228692000006
+||||||||||||||||||||||||BasicEvent|4|BUNDLE007|55555|EXTERNAL|UserA|EN|228692000007
+|||||||||||||||||||||||FinalCommit|BasicSession|1|BUNDLE008|66666|INVALID_TYPE|UserA|EN|228692000008
+|||||||||||||||||||||||FinalCommit|BasicEvent|2|BUNDLE009|77777|NOT_VALID|UserB|DE|228692000009
+|||||||||||||||||||||||FinalCommit|BasicSession|3|BUNDLE010|88888|BAD_SERVICE|UserC|FR|228692000010
+TXT;
+    }
+
+    /**
      * Generate look like file for testing
      *
      * @return string
