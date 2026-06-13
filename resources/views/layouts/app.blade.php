@@ -36,6 +36,12 @@
                         <i class="bi bi-x-circle me-1"></i>Invalid Confirmation Records
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('call-charge-record-invalids.*') ? 'active' : '' }}"
+                       href="{{ route('call-charge-record-invalids.index') }}">
+                        <i class="bi bi-exclamation-triangle me-1"></i>Invalid Call Charge Records
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
