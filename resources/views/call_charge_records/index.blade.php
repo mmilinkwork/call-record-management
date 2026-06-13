@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Call Charge Records</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+@extends('layouts.app')
 
-<div class="container-fluid mt-4">
+@section('title', 'Call Charge Records')
+
+@section('content')
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Call Charge Records</h2>
@@ -119,28 +114,5 @@
         {{ $records->links('pagination::bootstrap-5') }}
     </div>
 
-</div>
+@endsection
 
-<!-- Delete confirmation form (hidden) -->
-<form id="delete-form" method="POST" style="display:none;">
-    @csrf
-    @method('DELETE')
-</form>
-
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    $(function () {
-        $('.btn-delete').on('click', function () {
-            if (confirm('Are you sure you want to delete this record?')) {
-                var action = $(this).data('action');
-                $('#delete-form').attr('action', action).submit();
-            }
-        });
-    });
-</script>
-
-</body>
-</html>
