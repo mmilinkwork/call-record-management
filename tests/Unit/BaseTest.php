@@ -4,8 +4,10 @@ namespace Tests\Unit;
 
 use App\Services\FileUpload\Enums\CrceOperationEnum;
 use App\Services\FileUpload\Enums\FeatureEnum;
+use App\Services\FileUpload\Enums\ServiceTypeEnum;
 use App\Services\FileUpload\Enums\TrafficTypeEnum;
 use App\Services\FileUpload\Mapping\CallRecordMapper;
+use App\Services\FileUpload\Mapping\ConfirmationRecordMapper;
 use Faker\Factory;
 use Tests\TestCase;
 
@@ -19,6 +21,39 @@ class BaseTest extends TestCase
     protected function generateCallRecordFileMapper(): CallRecordMapper
     {
         return new CallRecordMapper($this->singleRecordData());
+    }
+
+    /**
+     * Generate fake data for ConfirmationRecordMapper.
+     *
+     * @return ConfirmationRecordMapper
+     */
+    protected function generateConfirmationRecordFileMapper(): ConfirmationRecordMapper
+    {
+        return new ConfirmationRecordMapper($this->singleConfirmationRecordData());
+    }
+
+    /**
+     * Return data with expected dummy values for a single confirmation record row.
+     * Keys are 1-based to match the output of ValidateFileRecordsService::parseSingleRow().
+     *
+     * @return array
+     */
+    private function singleConfirmationRecordData(): array
+    {
+        $faker = Factory::create();
+
+        return [
+            25 => CrceOperationEnum::FINAL_COMMIT->value,
+            26 => FeatureEnum::BASIC_SESSION->value,
+            27 => (string) $faker->numberBetween(1, 10),
+            28 => $faker->numerify('BUNDLE###'),
+            29 => (string) $faker->numberBetween(10000, 99999),
+            30 => ServiceTypeEnum::CRM->value,
+            31 => $faker->userName(),
+            32 => $faker->languageCode(),
+            33 => $faker->numerify('228692000######'),
+        ];
     }
 
     /**
