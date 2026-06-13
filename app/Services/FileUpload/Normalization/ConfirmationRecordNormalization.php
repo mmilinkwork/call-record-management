@@ -9,6 +9,6 @@ class ConfirmationRecordNormalization extends DataNormalization
 {
     public function adjustData(FileMappingInterface $singleRow): array
     {
-        return [];
+        return $singleRow->toArray();
     }
 }

@@ -47,8 +47,8 @@ class SaveFileRecordsService implements Contracts\SaveFileRecordsInterface
 
         $ingestionManager = $this->recordsIngestionManagerResolver->resolve($this->fileStrategy);
 
-        $ingestionManager->validCallRecordsBulkInsert($validData);
-        $ingestionManager->invalidCallRecordsBulkInsert($this->validateChargeRecordsService->getInvalidRecords());
+        $ingestionManager->validRecordsBulkInsert($validData);
+        $ingestionManager->invalidRecordsBulkInsert($this->validateChargeRecordsService->getInvalidRecords());
     }
 
     /**

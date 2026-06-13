@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 
 interface BulkRecordsIngestionManagerInterface
 {
-    public function validCallRecordsBulkInsert(Collection $records): void;
+    public function validRecordsBulkInsert(Collection $records): void;
 
-    public function invalidCallRecordsBulkInsert(Collection $records): void;
+    public function invalidRecordsBulkInsert(Collection $records): void;
 }

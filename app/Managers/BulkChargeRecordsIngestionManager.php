@@ -16,7 +16,7 @@ class BulkChargeRecordsIngestionManager implements BulkRecordsIngestionManagerIn
      * @param Collection $records
      * @return void
      */
-    public function validCallRecordsBulkInsert(Collection $records): void
+    public function validRecordsBulkInsert(Collection $records): void
     {
         try {
             CallChargeRecord::upsert($records->toArray(), 'reference_number');
@@ -34,7 +34,7 @@ class BulkChargeRecordsIngestionManager implements BulkRecordsIngestionManagerIn
      * @param Collection $records
      * @return void
      */
-    public function invalidCallRecordsBulkInsert(Collection $records): void
+    public function invalidRecordsBulkInsert(Collection $records): void
     {
         try {
             CallChargeRecordInvalid::insert($records->toArray());

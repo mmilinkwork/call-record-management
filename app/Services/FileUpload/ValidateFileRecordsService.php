@@ -10,7 +10,6 @@ use Illuminate\Support\Collection;
 
 class ValidateFileRecordsService implements Contracts\Validation\ValidateFileRecordsInterface
 {
-    private const EXPECTED_NUMBER_OF_FIELDS = 73; //Ovo se menja na nivou strategije
     private FileStrategyEnum $fileStrategy;
 
     private Collection $records;
@@ -40,39 +39,33 @@ class ValidateFileRecordsService implements Contracts\Validation\ValidateFileRec
     {
         foreach ($this->records as $record)
         {
-            if ($this->hasEnoughFields(explode('|', $record)))
+            try
             {
-                try {
-                    $mappedRow = $this->fileMappingStrategyResolver
-                                      ->resolve($this->fileStrategy, $this->parseSingleRow($record));
+                $mappedRow = $this->fileMappingStrategyResolver
+                                  ->resolve($this->fileStrategy, $this->parseSingleRow($record));
 
-                    $validationResult = $this->rowValidationStrategyResolver
+                $validationResult = $this->rowValidationStrategyResolver
                                              ->resolve($this->fileStrategy)
                                              ->validate($mappedRow);
 
-                    if ($validationResult->hasPassed())
-                    {
-                        $this->validRecords->push($mappedRow);
-                    } else
-                    {
-                        $invalidRow = (object) [
-                            'record' => $mappedRow->toJson(),
-                            'errors' => $validationResult->errors
-                        ];
+                if ($validationResult->hasPassed())
+                {
+                    $this->validRecords->push($mappedRow);
+                } else
+                {
+                    $invalidRow = (object) [
+                        'record' => $mappedRow->toJson(),
+                        'errors' => $validationResult->errors
+                    ];
 
-                        $this->invalidRecords->push($invalidRow);
-                    }
-
-                }catch (\Exception $exception) {
-                    $this->invalidRecords->push([
-                        'record' => $record,
-                        'message' => $exception->getMessage()
-                    ]);
+                    $this->invalidRecords->push($invalidRow);
                 }
-            } else {
+
+            }catch (\Exception $exception)
+            {
                 $this->invalidRecords->push([
                     'record' => $record,
-                    'message' => "Insufficient fields"
+                    'message' => $exception->getMessage()
                 ]);
             }
         }
@@ -98,19 +91,6 @@ class ValidateFileRecordsService implements Contracts\Validation\ValidateFileRec
         );
 
         return $values;
-    }
-
-    /**
-     * We are expecting exactly 73 fields in each row of the charge record file.
-     * If there are more or less fields, we will consider that row as invalid and we will skip it.
-     * Documentation link: https://www.example.org/pscharfen-CRCECONF-ConfirmationRecord-280423-0734-135.pdf
-     *
-     * @param array $record
-     * @return bool
-     */
-    private function hasEnoughFields(array $record): bool
-    {
-        return count($record) == self::EXPECTED_NUMBER_OF_FIELDS;
     }
 
     /**
